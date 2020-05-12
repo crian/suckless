@@ -180,8 +180,9 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
 					passwd[--len] = '\0';
 				break;
 			default:
-				if (num && !iscntrl((int)buf[0]) &&
-				    (len + num < sizeof(passwd))) {
+				if (controlkeyclear && iscntrl((int)buf[0]))
+					continue;
+				if (num && (len + num < sizeof(passwd))) {
 					memcpy(passwd + len, buf, num);
 					len += num;
 				}
