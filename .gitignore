@@ -1,0 +1,5 @@
+config.h
+tabbed
+tabbed.o
+xembed
+xembed.o
