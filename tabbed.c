@@ -152,7 +152,7 @@ static void (*handler[LASTEvent]) (const XEvent *) = {
 	[MapRequest] = maprequest,
 	[PropertyNotify] = propertynotify,
 };
-static int bh, wx, wy, ww, wh;
+static int bh, obh, wx, wy, ww, wh;
 static unsigned int numlockmask;
 static Bool running = True, nextfocus, doinitspawn = True,
             fillagain = False, closelastclient = False,
@@ -256,6 +256,15 @@ configurenotify(const XEvent *e)
 		XFreePixmap(dpy, dc.drawable);
 		dc.drawable = XCreatePixmap(dpy, root, ww, wh,
 		              DefaultDepth(dpy, screen));
+
+		if (!obh && (wh <= bh)) {
+			obh = bh;
+			bh = 0;
+		} else if (!bh && (wh > obh)) {
+			bh = obh;
+			obh = 0;
+		}
+
 		if (sel > -1)
 			resize(sel, ww, wh - bh);
 		XSync(dpy, False);
@@ -872,7 +881,7 @@ resize(int c, int w, int h)
 	XWindowChanges wc;
 
 	ce.x = 0;
-	ce.y = bh;
+	ce.y = wc.y = bh;
 	ce.width = wc.width = w;
 	ce.height = wc.height = h;
 	ce.type = ConfigureNotify;
@@ -883,7 +892,7 @@ resize(int c, int w, int h)
 	ce.override_redirect = False;
 	ce.border_width = 0;
 
-	XConfigureWindow(dpy, clients[c]->win, CWWidth | CWHeight, &wc);
+	XConfigureWindow(dpy, clients[c]->win, CWY | CWWidth | CWHeight, &wc);
 	XSendEvent(dpy, clients[c]->win, False, StructureNotifyMask,
 	           (XEvent *)&ce);
 }
@@ -1046,9 +1055,10 @@ setup(void)
 
 	size_hint = XAllocSizeHints();
 	if (!isfixed) {
-		size_hint->flags = PSize;
+		size_hint->flags = PSize | PMinSize;
 		size_hint->height = wh;
 		size_hint->width = ww;
+		size_hint->min_height = bh + 1;
 	} else {
 		size_hint->flags = PMaxSize | PMinSize;
 		size_hint->min_width = size_hint->max_width = ww;
