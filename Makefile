@@ -1,3 +1,5 @@
+.POSIX:
+
 PREFIX ?= /usr/local
 CC ?= cc
 LDFLAGS = -lX11
@@ -15,3 +17,5 @@ install: output
 	install -m 0755 dwmblocks $(DESTDIR)$(PREFIX)/bin/dwmblocks
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/dwmblocks
+
+.PHONY: clean install uninstall
