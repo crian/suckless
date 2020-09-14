@@ -229,6 +229,14 @@ ResourcePref resources[] = {
 		{ "chscale",      FLOAT,   &chscale },
 };
 
+static char *openurlcmd[] = { "/bin/sh", "-c", "st-urlhandler", "externalpipe", NULL };
+
+static char *copyurlcmd[] = { "/bin/sh", "-c",
+	"tmp=$(sed 's/.*│//g' | tr -d '\n' | grep -aEo '(((http|https|gopher|gemini|ftp|ftps|git)://|www\\.)[a-zA-Z0-9.]*[:]?[a-zA-Z0-9./@$&%?$#=_-~]*)|((magnet:\\?xt=urn:btih:)[a-zA-Z0-9]*)' | uniq | sed 's/^www./http:\\/\\/www\\./g' ); IFS=; [ ! -z $tmp ] && echo $tmp | dmenu -i -p 'Copy which url?' -l 10 | tr -d '\n' | xclip -selection clipboard",
+	"externalpipe", NULL };
+
+static char *copyoutput[] = { "/bin/sh", "-c", "st-copyout", "externalpipe", NULL };
+
 /*
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
@@ -264,6 +272,9 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
 	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
+	{ MODKEY,               XK_l,           externalpipe,   {.v = openurlcmd } },
+	{ MODKEY,               XK_y,           externalpipe,   {.v = copyurlcmd } },
+	{ MODKEY,               XK_o,           externalpipe,   {.v = copyoutput } },
 };
 
 /*
