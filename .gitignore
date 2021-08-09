@@ -1,0 +1,5 @@
+config.h
+surf
+surf.o
+webext-surf.o
+webext-surf.so
