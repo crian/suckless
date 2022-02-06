@@ -102,17 +102,6 @@ cleanup(void)
 	XCloseDisplay(dpy);
 }
 
-static char *
-cistrstr(const char *s, const char *sub)
-{
-	size_t len;
-
-	for (len = strlen(sub); *s; s++)
-		if (!strncasecmp(s, sub, len))
-			return (char *)s;
-	return NULL;
-}
-
 static int
 drawitem(struct item *item, int x, int y, int w)
 {
@@ -722,7 +711,7 @@ main(int argc, char *argv[])
 			fast = 1;
 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
 			fstrncmp = strncasecmp;
-			fstrstr = cistrstr;
+			fstrstr = strcasestr;
 		} else if (i + 1 == argc)
 			usage();
 		/* these options take one argument */
