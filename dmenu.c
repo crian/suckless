@@ -104,7 +104,6 @@ cleanup(void)
 
 static char *
 cistrstr(const char *h, const char *n)
-
 {
 	size_t i;
 
