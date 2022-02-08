@@ -102,6 +102,25 @@ cleanup(void)
 	XCloseDisplay(dpy);
 }
 
+static char *
+cistrstr(const char *h, const char *n)
+
+{
+	size_t i;
+
+	if (!n[0])
+		return (char *)h;
+
+	for (; *h; ++h) {
+		for (i = 0; n[i] && tolower((unsigned char)n[i]) ==
+		            tolower((unsigned char)h[i]); ++i)
+			;
+		if (n[i] == '\0')
+			return (char *)h;
+	}
+	return NULL;
+}
+
 static int
 drawitem(struct item *item, int x, int y, int w)
 {
@@ -711,7 +730,7 @@ main(int argc, char *argv[])
 			fast = 1;
 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
 			fstrncmp = strncasecmp;
-			fstrstr = strcasestr;
+			fstrstr = cistrstr;
 		} else if (i + 1 == argc)
 			usage();
 		/* these options take one argument */
