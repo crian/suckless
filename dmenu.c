@@ -610,13 +610,12 @@ static void
 setup(void)
 {
 	int x, y, i, j;
-	unsigned int du, tmp;
+	unsigned int du;
 	XSetWindowAttributes swa;
 	XIM xim;
 	Window w, dw, *dws;
 	XWindowAttributes wa;
 	XClassHint ch = {"dmenu", "dmenu"};
-	struct item *item;
 #ifdef XINERAMA
 	XineramaScreenInfo *info;
 	Window pw;
@@ -674,12 +673,7 @@ setup(void)
 		mw = wa.width;
 	}
 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
-	for (item = items; item && item->text; ++item) {
-		if ((tmp = textw_clamp(item->text, mw/3)) > inputw) {
-			if ((inputw = tmp) == mw/3)
-				break;
-		}
-	}
+	inputw = mw / 3; /* input width: ~30% of monitor width */
 	match();
 
 	/* create menu window */
