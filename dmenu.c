@@ -519,7 +519,7 @@ insert:
 			return;
 		cursor = strnlen(sel->text, sizeof text - 1);
 		memcpy(text, sel->text, cursor);
-		text[sizeof text - 1] = '\0';
+		text[cursor] = '\0';
 		match();
 		break;
 	}
