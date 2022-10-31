@@ -562,7 +562,7 @@ readstdin(void)
 			line[len - 1] = '\0';
 		items[i].text = line;
 		items[i].out = 0;
-		line = NULL;
+		line = NULL; /* next call of getline() allocates a new line */
 	}
 	free(line);
 	if (items)
